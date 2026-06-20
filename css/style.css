@@ -5,3 +5,67 @@
  * Joe Plummer, UMass Lowell Computer Science, joseph_plummer@student.uml.edu
  * Copyright (c) 2026 by Joe Plummer. All rights reserved. May be freely copied or excerpted for educational purposes with credit to the author.
  */
+
+ /* header */
+ h1 {
+    /* font-size: 150%; */
+    font-weight: bold;
+    padding: 10px;
+ }
+
+ /* board */
+#board {
+    /* position: absolute; */
+    float: left;
+    width: 1000px;
+    /* left: 0; */
+    top: 75px;
+    /* background-color: aquamarine; */
+    background-image: url("../graphics_data/graphics_data/Scrabble_Board_OneLine.png");
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: cover;
+    z-index: 0;
+}
+/* spaces */
+.space {
+    /* left: 10px;
+    top: 0; */
+    width: 60px;
+    height: 60px;
+    padding: 0.5em;
+    margin: 5px;
+    float: left;
+    background: #999;
+    color: #fff;
+    padding: 10px;
+    z-index: 1;
+}
+ /* tile rack */
+#tile-rack {
+    /* position: absolute; */
+    /* top: 250px; */
+    /* left: 0; */
+    float: left;
+    /* background-color: palevioletred; */
+    /* width: 1000px; */
+    height: 100px;
+    margin-top: 20px;
+    z-index: 0;
+    background-image: url("../graphics_data/graphics_data/scrabble-tile-holder-406774_640.png");
+    background-repeat: no-repeat;
+    background-position: left;
+    background-size: cover;
+}
+/* tiles */
+.tiles {
+    width: 50px;
+    height: 50px;
+    padding: 0.5em;
+    float: left;
+    margin: 5px;
+    margin-top: 15px;
+    background: #6c582a;
+    z-index: 2;
+}
+

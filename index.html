@@ -12,14 +12,49 @@ Copyright (c) 2026 by Joe Plummer. All rights reserved. May be freely copied or 
         <title>Scrabble!</title>
 
         <!-- style sheets -->
-        <link rel="stylesheet" href="style.css">
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.2/themes/base/jquery-ui.css">
+        <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.2/themes/base/jquery-ui.css">
+        <link rel="stylesheet" href="css/style.css">
 
         
     </head>
     <body>
-        <!-- page content -->
+        <h1>Scrabble</h1>
+
+        <div id="board">
+            <div id="droppable" class="space">Drop here</div>
+            <div id="droppable1" class="space">Drop here</div>
+            <div id="droppable2" class="space">Drop here</div>
+            <div id="droppable3" class="space">Drop here</div>
+            <div id="droppable4" class="space">Drop here</div>
+            <div id="droppable5" class="space">Drop here</div>
+            <div id="droppable6" class="space">Drop here</div>
+        </div>
+
+        
+
+        <div id="tile-rack">
+            <div id="draggable" class="tiles">Drag me</div>
+            <div id="draggable1" class="tiles">Drag me</div>
+            <div id="draggable2" class="tiles">Drag me</div>
+            <div id="draggable3" class="tiles">Drag me</div>
+            <div id="draggable4" class="tiles">Drag me</div>
+            <div id="draggable5" class="tiles">Drag me</div>
+            <div id="draggable6" class="tiles">Drag me</div>
+        </div>
+
+        
+        
+        
+        
+        
 
         <!-- scripts -->
-        <script src="script.js"></script>
+        <!-- jQuery -->
+        <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/jquery-validation@1.19.5/dist/jquery.validate.min.js"></script>
+        <script src="https://code.jquery.com/ui/1.14.2/jquery-ui.min.js" integrity="sha256-mblSWfbYzaq/f+4akyMhE6XELCou4jbkgPv+JQPER2M=" crossorigin="anonymous"></script>
+        <!-- JS -->
+        <script src="js/script.js"></script>
     </body>
 </html>
