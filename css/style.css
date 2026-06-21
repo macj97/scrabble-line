@@ -8,6 +8,8 @@
 
  body {
     min-width: 750px;
+    width: fit-content;
+    background: bisque;
  }
 
  /* header */
@@ -37,7 +39,7 @@
     top: 0; */
     width: 40px;
     height: 40px;
-    padding: 0.5em;
+    padding: 10px;
     margin: 0px;
     float: left;
     background: #cabd84;
@@ -51,7 +53,7 @@
     border-bottom: 3px solid black;
     border-left: 1.5px solid black;
     border-right: 1.5px solid black;
-    padding: 10px;
+    /* padding: 10px; */
     z-index: 1;
 }
 /* .spaces:first-child {
@@ -69,25 +71,30 @@
 
  /* tile rack */
 #tile-rack {
-    /* position: absolute; */
+    position: relative;
     /* top: 250px; */
     /* left: 0; */
     float: left;
     /* background-color: palevioletred; */
-    /* width: 1000px; */
+    width: 600px;
     height: 100px;
     margin-top: 20px;
+    /* padding-left: 100px; */
     z-index: 0;
     background-image: url("../graphics_data/graphics_data/scrabble-tile-holder-406774_640.png");
     background-repeat: no-repeat;
     background-position: left;
-    background-size: cover;
+    background-size: 100% 100%;
 }
 /* tiles */
 .tiles {
-    width: 40px;
-    height: 40px;
-    padding: 0.5em;
+    width: 60px;
+    height: 60px;
+    /* display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    position: absolute; */
+    /* padding: 0.5em; */
     float: left;
     margin: 5px;
     margin-top: 15px;

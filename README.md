@@ -3,4 +3,6 @@ Implementing a bit of Scrabble with drag-and-drop for Assignment 5 of the class 
 
 Scrabble bag image: https://i.etsystatic.com/9912930/r/il/fc9e74/4329904185/il_600x600.4329904185_403m.jpg
 
+JS Random Function: https://www.w3schools.com/JS/js_random.asp
+
 

@@ -21,27 +21,74 @@ $(function() { // jQuery ready function
         $space.attr("class", "spaces");
         $space.droppable({
             drop: function(event, ui) {
+
                 console.log(event + " item has been dropped");
-                console.log("$(this).offset().left/$(this).offset().top:", $(this).offset().left, $(this).offset().top);
-                console.log("ui.offset.left/ui.offset.top:", ui.offset.left, ui.offset.top);
-                // Source - https://stackoverflow.com/a/34247600
-                // Posted by julian soro, modified by community. See post 'Timeline' for change history
-                // Retrieved 2026-06-20, License - CC BY-SA 3.0
-                // let drop_x = $(this).offset().left - ui.offset.left;
-                // let drop_y = $(this).offset().top - ui.offset.top;
-                let drop_x = $(this).offset().left;
-                let drop_y = $(this).offset().top;
-                console.log("drop_x'drop_y", drop_x, drop_y);
-                ui.draggable.css('top', drop_y+'px');  // y-axis
-                ui.draggable.css('left', drop_x+'px'); // x-axis
+
+                // setting the coordinates of the ui/tile object
+
+                // console.log("$(this).offset().left/$(this).offset().top:", $(this).offset().left, $(this).offset().top);
+                // console.log("ui.offset.left/ui.offset.top:", ui.offset.left, ui.offset.top);
+                // // Source - https://stackoverflow.com/a/34247600
+                // // Posted by julian soro, modified by community. See post 'Timeline' for change history
+                // // Retrieved 2026-06-20, License - CC BY-SA 3.0
+                // // let drop_x = $(this).offset().left - ui.offset.left;
+                // // let drop_y = $(this).offset().top - ui.offset.top;
+                // let drop_x = $(this).offset().left;
+                // let drop_y = $(this).offset().top;
+                // console.log("drop_x'drop_y", drop_x, drop_y);
+                // ui.draggable.css('position', "absolute");
+                // ui.draggable.css('top', drop_y-10+'px');  // y-axis
+                // ui.draggable.css('left', drop_x+'px'); // x-axis
+
+                // appending ui/tile to the space to center it into the space
+
+                console.log("$(this): ", $(this));
+                console.log("this: ", this);
+                console.log("$(this).offset()", $(this).offset());
+                console.log("$(ui): ", $(ui));
+                console.log("ui: ", ui);
+                console.log("$(ui.draggable): ", $(ui.draggable));
+                console.log("ui.draggable: ", ui.draggable);
+                console.log("$(ui.helper): ", $(ui.helper));
+                console.log("ui.helper: ", ui.helper);
+
+                console.log("Before append ui.draggable.offset(): ", ui.draggable.offset());
+
+                $(this).append(ui.draggable);
+                console.log("$(this).offset()", $(this).offset());
+                console.log("After append ui.draggable.offset(): ", ui.draggable.offset());
+                let spacePos = $(this).offset();
+                console.log("spacePos", spacePos);
+                spacePos.top = spacePos.top + 3;
+                spacePos.left = spacePos.left + 3;
+                console.log("spacePos", spacePos);
+                ui.draggable.offset(spacePos);
+                console.log("After setting ui.draggable.offset(): ", ui.draggable.offset());
+
+                // $(ui.draggable).appendTo(this);
+                // let spacePos = $(this).offset;
+                // $(ui.draggable).offset({top: spacePos.top, left: spacePos.left});
+                // css({ position: "absolute", left: 0, top: 0} );
+                // console.log("$(this): ", $(this));
+                // ui.draggable.css('position', "relative");
+                // ui.draggable.css('top', 0);  // y-axis
+                // ui.draggable.css('left', 0); // x-axis
+
+                // making the tile not moveable after being dropped
+                ui.draggable.draggable("disable");
+
 
             },
-            tolerance: "intersect"
+            tolerance: "intersect", // if tile is at least 50% over the space it is dropped
+            accept: function() { // only one tile per space
+                return ($(this).children().length === 0)
+            }
         });
         spaceID = spaceID + 1;
         return $space;
     }
 
+    // calling createSpace, assinging special spaces
     for (let j = 0; j < numSpaces; j++) {
         let $newSpace = createSpace();
         if (j === 2 || j === 12) {
@@ -153,10 +200,10 @@ $(function() { // jQuery ready function
 
     const array = ["a", "b", "c"];
 
-    array.forEach((item) => console.log("Item= ", item));
+    // array.forEach((item) => console.log("Item= ", item));
 
     // console.log("ScrabbleTiles: ", ScrabbleTiles);
-    console.log("ScrabbleTiles: ", ScrabbleTiles['A']['original-distribution']);
+    // console.log("ScrabbleTiles: ", ScrabbleTiles['A']['original-distribution']);
     
 
     // ScrabbleTiles.forEach((item) => console.log("Item= ", item));
@@ -164,20 +211,20 @@ $(function() { // jQuery ready function
     let letter;
     let offset = 0;
     for (letter in ScrabbleTiles) {
-        console.log("Letter: ", letter);
-        console.log("Number-remaining: ", ScrabbleTiles[letter]['number-remaining'])
+        // console.log("Letter: ", letter);
+        // console.log("Number-remaining: ", ScrabbleTiles[letter]['number-remaining'])
         for (let k = 0; k < ScrabbleTiles[letter]['number-remaining']; k++) {
             pieces_array[offset + k] = letter;
         }
         offset += ScrabbleTiles[letter]['number-remaining'];
     }
 
-    console.log("pieces_array: ", pieces_array);
+    // console.log("pieces_array: ", pieces_array);
 
     // for random number generator
     let min = 0;
     let max = pieces_array.length - 1;
-    console.log("Min/max: ", min, max);
+    // console.log("Min/max: ", min, max);
 
 
     function createTile() {
@@ -191,12 +238,12 @@ $(function() { // jQuery ready function
         let index = getRndInteger(min, max);
         max--;
         let tile_letter = pieces_array[index];
-        console.log("tile_letter: ", tile_letter);
-        console.log("pieces_array[index]: ", pieces_array[index]);
+        // console.log("tile_letter: ", tile_letter);
+        // console.log("pieces_array[index]: ", pieces_array[index]);
         if (!(tile_letter == "_")) {
             $tile.css("background-image", "url('./graphics_data/graphics_data/Scrabble_Tiles/Scrabble_Tile_"+tile_letter+".jpg')");
-            console.log("Should not be blank");
-            console.log("url('./graphics_data/graphics_data/Scrabble_Tiles/Scrabble_Tile_'"+tile_letter+"'.jpg')");
+            // console.log("Should not be blank");
+            // console.log("url('./graphics_data/graphics_data/Scrabble_Tiles/Scrabble_Tile_'"+tile_letter+"'.jpg')");
         } else {
             $tile.css("background-image", "url('./graphics_data/graphics_data/Scrabble_Tiles/Scrabble_Tile_Blank.jpg')");
             console.log("Should be blank");
