@@ -6,15 +6,25 @@
  * Copyright (c) 2026 by Joe Plummer. All rights reserved. May be freely copied or excerpted for educational purposes with credit to the author.
  */
 
+
+/* entire page */
  body {
     min-width: 750px;
     width: fit-content;
     background: bisque;
+    display: block;
  }
 
  /* header */
  h1 {
     /* font-size: 150%; */
+    font-weight: bold;
+    padding: 10px;
+ }
+
+ /* score */
+ #score-container {
+    display: inline;
     font-weight: bold;
     padding: 10px;
  }
@@ -103,3 +113,7 @@
     z-index: 2;
 }
 
+/* submit button */
+#submit {
+    margin: 20px;
+}

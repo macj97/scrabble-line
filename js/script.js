@@ -54,6 +54,11 @@ $(function() { // jQuery ready function
 
                 console.log("Before append ui.draggable.offset(): ", ui.draggable.offset());
 
+                // TO-DO: function that checks if ok to drop the tile
+                //          check if space is open
+                //          check if first tile being dropped (true: logic stops, false:)
+                //              then check if space to the left has a tile
+                //          edge cases
                 $(this).append(ui.draggable);
                 console.log("$(this).offset()", $(this).offset());
                 console.log("After append ui.draggable.offset(): ", ui.draggable.offset());
@@ -80,7 +85,7 @@ $(function() { // jQuery ready function
 
             },
             tolerance: "intersect", // if tile is at least 50% over the space it is dropped
-            accept: function() { // only one tile per space
+            accept: function() { // only one tile per space, TO-DO: move this to drop
                 return ($(this).children().length === 0)
             }
         });
@@ -166,7 +171,7 @@ $(function() { // jQuery ready function
     
     let tileID = 0; // counter for tileID creation
     let numTiles = 7; // counter for tile creation
-    const tile_array = []; // array of spaces and their types
+    const tile_array = []; // array of tiles and their types
     let $tile_rack = $("#tile-rack"); // actual tile-rack div
 
     // trying to use the json file:
@@ -196,9 +201,9 @@ $(function() { // jQuery ready function
 
     // using Scrabble_Pieces JS file:
 
-    pieces_array = [];
+    pieces_array = []; // array holding actual letter characters
 
-    const array = ["a", "b", "c"];
+    // const array = ["a", "b", "c"];
 
     // array.forEach((item) => console.log("Item= ", item));
 
@@ -208,6 +213,7 @@ $(function() { // jQuery ready function
 
     // ScrabbleTiles.forEach((item) => console.log("Item= ", item));
 
+    // populate pieces_array
     let letter;
     let offset = 0;
     for (letter in ScrabbleTiles) {
@@ -227,6 +233,7 @@ $(function() { // jQuery ready function
     // console.log("Min/max: ", min, max);
 
 
+    // creates a tile div, assigns attributes
     function createTile() {
         // create div element
         let $tile = $("<div></div>");
@@ -240,17 +247,18 @@ $(function() { // jQuery ready function
         let tile_letter = pieces_array[index];
         // console.log("tile_letter: ", tile_letter);
         // console.log("pieces_array[index]: ", pieces_array[index]);
-        if (!(tile_letter == "_")) {
+        if (!(tile_letter == "_")) { // blank image
             $tile.css("background-image", "url('./graphics_data/graphics_data/Scrabble_Tiles/Scrabble_Tile_"+tile_letter+".jpg')");
             // console.log("Should not be blank");
             // console.log("url('./graphics_data/graphics_data/Scrabble_Tiles/Scrabble_Tile_'"+tile_letter+"'.jpg')");
-        } else {
+        } else { // letter image
             $tile.css("background-image", "url('./graphics_data/graphics_data/Scrabble_Tiles/Scrabble_Tile_Blank.jpg')");
             console.log("Should be blank");
         }
-        pieces_array.splice(index, 1);
-        tileID = tileID + 1;
-        return $tile
+        pieces_array.splice(index, 1); // remove letter from pieces_array
+        tileID = tileID + 1; // increment tileID number
+        $tile.attr("letter", tile_letter); // add letter attribute
+        return $tile // return the tile jq variables
     }
     
     for (let i = 0; i < numTiles; i++) {
@@ -267,6 +275,86 @@ $(function() { // jQuery ready function
     // $("#draggable5").draggable({ revert: "invalid" });
     // $("#draggable6").draggable({ revert: "invalid" });
 
+    // create submit button
+    $("#submit").button();
 
+    // jquery var for submit button
+    let $submit = $("#submit");
+
+    // console.log("board_array: ", board_array);
+    // board_array.forEach(function(i) {
+    //     console.log("board_array element: ", i);
+    // });
+
+    // while (true) {
+    //     $("#score:last-child").text(calculateScore);
+    // }
+
+    // a tile is placed into a space 
+    // $("#board > *").on("drop", function(event, ui) {
+    //     console.log("A tile was palced on the board! Calculating potential score...");
+    //     $("#potential-score").text("Current Word Score: " + calculateScore().toString());
+    // });
+
+
+
+    // submit button is clicked
+    $submit.click(function() {
+        // console.log("submit button was clicked");
+        console.log('$("#score")', $("#score"));
+        calculateScore();
+        $("#score").text("Score: " + calculateScore().toString());
+    });
+
+    function calculateScore() {
+        let totalScore = 0;
+        let dwScore = false;
+        let dlScore = false;
+        let dlScore_letter_score = 0;
+        board_array.forEach(function(i) {
+            // console.log("board_array element: ", i);
+            // console.log("array_board[i].children().length", i.children().length);
+            if (!(i.children().length === 0)) {
+                // return i.css("background-image");
+                // console.log("board_array element: ", i);
+                console.log("board_array element children: ", i.children());
+                // console.log("board_array element children attribute letter: ", i.children().attr("letter"));
+                // console.log("board_array element class: ", i.attr("class"));
+                let letter = i.children().attr("letter").toString();
+                if (i.hasClass("double-word")) {
+                    console.log("double word!");
+                    dwScore = true;
+                    console.log("dwScore: ", dwScore);
+                }
+                if (i.hasClass("double-letter")) {
+                    console.log("double letter!");
+                    dlScore = true;
+                    console.log("dlScore: ", dlScore);
+                    dlScore_letter_score = Number(ScrabbleTiles[letter].value) * 2;
+                    console.log("dlScore_letter_score", dlScore_letter_score);
+                }
+                if (dlScore) {
+                    console.log("Setting score with dlScore...");
+                    totalScore += dlScore_letter_score;
+                    console.log("totalScore: ", totalScore);
+                    dlScore = false; // reset varable
+                    console.log("dlScore: ", dlScore);
+                } else {
+                    console.log("Setting score...");
+                    totalScore += Number(ScrabbleTiles[letter].value);
+                    console.log("totalScore: ", totalScore);
+                }
+            }
+        });
+
+        if (dwScore) {
+            console.log("There was a double word!");
+            totalScore *= 2;
+        }
+
+        console.log("Final totalScore:", totalScore);
+        return totalScore;
+
+    }
 
 });
