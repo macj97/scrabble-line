@@ -49,12 +49,12 @@ $(function() { // jQuery ready function
                 // appending ui/tile to the space to center it into the space
 
                 // console.log("$(this): ", $(this));
-                // console.log("this: ", this);
+                console.log("this: ", this);
                 // console.log("$(this).offset()", $(this).offset());
                 // console.log("$(ui): ", $(ui));
-                // console.log("ui: ", ui);
+                console.log("ui: ", ui);
                 // console.log("$(ui.draggable): ", $(ui.draggable));
-                // console.log("ui.draggable: ", ui.draggable);
+                console.log("ui.draggable: ", ui.draggable);
                 // console.log("$(ui.helper): ", $(ui.helper));
                 // console.log("ui.helper: ", ui.helper);
 
@@ -62,27 +62,48 @@ $(function() { // jQuery ready function
 
                 // TO-DO: function that checks if ok to drop the tile
 
-                if (isOkayToDropTile($(this), ui)){
+                if (isOkayToDropTile($(this))){
                     console.log("Tile is okay to drop");
                     $(this).droppable("option", "accept", function() {
                         return true; 
                     });
+
+
                     $(this).append(ui.draggable);
+
+                    // console.log("ui.draggable.parent()", ui.draggable.parent());
+                    // ui.draggable.css({
+                    //     position: "absolute",
+                    //     left: 0,
+                    //     top: 0,
+                    // });
+
+                    
                     let spacePos = $(this).offset();
+                    // let spacePos = this.offset;
+                    console.log("$(this).offset(): ", $(this).offset());
+                    console.log("Before offset spacePos: ", spacePos);
                     spacePos.top = spacePos.top + 3;
                     spacePos.left = spacePos.left + 3;
+                    console.log("After offset spacePos: ", spacePos);
                     ui.draggable.offset(spacePos);
+                    // ui.offset = spacePos;
+                    console.log("ui.draggable.offset()", ui.draggable.offset());
+                    // console.log("ui.offset", ui.offset);
                     ui.draggable.draggable("disable");
+                    ui.draggable.draggable( "option", "disabled", true );
+                    console.log("spacePos: ", spacePos);
                     // calculate current word score
                     $("#potential-score").text("Current Word Score: " + calculateScore().toString());
+                    
                 }
                 else {
                     console.log("Tile is NOT okay to drop!");
                     // make file vert back to rack
                     ui.draggable.draggable("option", "revert", true);
-                    $(this).droppable("option", "accept", function() {
-                        return false;
-                    });
+                    // $(this).droppable("option", "accept", function() {
+                    //     return false;
+                    // });
                 }
                 
                 // check if space is empty
@@ -137,15 +158,15 @@ $(function() { // jQuery ready function
 
             },
             tolerance: "intersect", // if tile is at least 50% over the space it is dropped
-            accept: function() { // only one tile per space, TO-DO: move this to drop
-                return ($(this).children().length === 0)
-            }
+            // accept: function() { // only one tile per space, TO-DO: move this to drop
+            //     return ($(this).children().length === 0)
+            // }
         });
         spaceID = spaceID + 1;
         return $space;
     }
 
-    function isOkayToDropTile($space, $tile) {
+    function isOkayToDropTile($space) {
         let isEmpty, isFirst, isPrevSpaceOcc = false;
         let childNum = 0;
         console.log("isOkayToDropTile(): $space.attr('id'):", $space.attr("id"));
@@ -173,7 +194,7 @@ $(function() { // jQuery ready function
         } else {
             // check if previous space is occupied
             console.log("isOkayToDropTile(): isEmpty && isFirst were NOT true...");
-            console.log("isOkayToDropTile(): $(prevSpaceID).children().length: ", $(prevSpaceID).children().length);
+            console.log("isOkayToDropTile(): $(prevSpaceID).children().length: ", $("#"+prevSpaceID).children().length);
             if (!($("#"+prevSpaceID).children().length === 0)) {
                 console.log("isOkayToDropTile(): isPrevSpaceOcc now true...");
                 isPrevSpaceOcc = true;
@@ -192,6 +213,8 @@ $(function() { // jQuery ready function
     function createBoard() {
         // clear board first
         $board.html("");
+        spaceID = 0;
+        board_array.length = 0;
         // calling createSpace, assinging special spaces
         for (let j = 0; j < numSpaces; j++) {
             let $newSpace = createSpace();
@@ -209,6 +232,7 @@ $(function() { // jQuery ready function
         }
     }
     
+    // returns a random integer between min and max (both included)
     function getRndInteger(min, max) {
         return Math.floor(Math.random() * (max - min + 1) ) + min;
     }
@@ -220,14 +244,16 @@ $(function() { // jQuery ready function
     
     let tileID = 0; // counter for tileID creation
     let numTiles = 7; // counter for tile creation
-    const tile_array = []; // array of tiles and their types
+    // const tile_array = []; // array of tiles and their piece types
     let $tile_rack = $("#tile-rack"); // actual tile-rack div
-    pieces_array = []; // array holding actual letter characters
+    pieces_array = []; // array holding the letter characters
+    let totalScore = 0; // total running score
 
     populatePiecesArray();
     // for random number generator
     let min = 0;
     let max = pieces_array.length - 1;
+    // let max = 14; // for testing
     // console.log("Min/max: ", min, max);
 
     createTileRack();
@@ -302,6 +328,10 @@ $(function() { // jQuery ready function
         // setting graphic
         let index = getRndInteger(min, max);
         max--;
+        // console.log("createTile(): remaining tiles: ", max);
+        if (max < 0){ // if there are not more tiles to generate
+            return null;
+        }
         let tile_letter = pieces_array[index];
         // console.log("tile_letter: ", tile_letter);
         // console.log("pieces_array[index]: ", pieces_array[index]);
@@ -322,10 +352,14 @@ $(function() { // jQuery ready function
     function createTileRack() {
         // clear tile rack
         $tile_rack.html("");
+        // generate new tiles
         for (let i = 0; i < numTiles; i++) {
             let $newTile = createTile();
+            if ($newTile === null) { // if there are no more tiles
+                return;
+            }
             $tile_rack.append($newTile);
-            tile_array[i] = $newTile;
+            // tile_array[i] = $newTile;
         }
     }
     
@@ -360,7 +394,27 @@ $(function() { // jQuery ready function
         // console.log("submit button was clicked");
         // console.log('$("#score")', $("#score"));
         // calculateScore();
-        $("#score").text("Score: " + calculateScore().toString());
+        let numTilesOnBoard = 0; // counter for tiles on board for new tile pieces
+
+        // calcuate and display total score
+        totalScore += calculateScore();
+        $("#score").text("Score: " + totalScore.toString());
+
+        // reset tile rack
+        board_array.forEach(function(i) {
+            numTilesOnBoard += i.children().length;
+        });
+        console.log("submit.click: numTilesOnBoard: ", numTilesOnBoard);
+        if (numTilesOnBoard > 0) { // if there are tiles on the board
+            for (let l = 0; l < numTilesOnBoard; l++) {
+                let $newTile = createTile();
+                if (!($newTile === null)) { // if there are more tiles
+                    $tile_rack.append($newTile);
+                }
+            }
+            createBoard(); // reset board
+            $("#potential-score").text("Current Word Score: 0"); // reset potential score
+        }
     });
 
     function calculateScore() {
@@ -416,17 +470,20 @@ $(function() { // jQuery ready function
 
     // restart button
 
+    let isPressedRestart = false;
+
     // create restart button
     $("#restart").button();
 
     // jquery var for submit button
     let $restart = $("#restart");
 
-
     // restart button is clicked
     $restart.click(function() {
         console.log("restart button was clicked");
+        isPressedRestart = true;
         console.log('$("#restart")', $("#restart"));
+        totalScore = 0;
         createBoard();
         populatePiecesArray();
         createTileRack();
