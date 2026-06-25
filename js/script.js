@@ -68,6 +68,7 @@ $(function() { // jQuery ready function
                         return true; 
                     });
 
+                    ui.draggable.draggable("option", "revert", "invalid");
 
                     $(this).append(ui.draggable);
 
@@ -78,7 +79,6 @@ $(function() { // jQuery ready function
                     //     top: 0,
                     // });
 
-                    
                     let spacePos = $(this).offset();
                     // let spacePos = this.offset;
                     console.log("$(this).offset(): ", $(this).offset());
@@ -238,8 +238,7 @@ $(function() { // jQuery ready function
     }
 
 
-
-
+    
     // create tiles
     
     let tileID = 0; // counter for tileID creation
@@ -252,8 +251,8 @@ $(function() { // jQuery ready function
     populatePiecesArray();
     // for random number generator
     let min = 0;
-    let max = pieces_array.length - 1;
-    // let max = 14; // for testing
+    // let max = pieces_array.length - 1;
+    let max = 7; // for testing
     // console.log("Min/max: ", min, max);
 
     createTileRack();
@@ -388,6 +387,7 @@ $(function() { // jQuery ready function
     // });
 
 
+    let isDepletedMessageOn = false; 
 
     // submit button is clicked
     $submit.click(function() {
@@ -410,6 +410,13 @@ $(function() { // jQuery ready function
                 let $newTile = createTile();
                 if (!($newTile === null)) { // if there are more tiles
                     $tile_rack.append($newTile);
+                }
+                else {
+                    if (!isDepletedMessageOn) {
+                        $("body").append("<p id='tiles-depleted'>All tiles have been dealt!</p>");
+                        isDepletedMessageOn = true;
+                    }
+                    
                 }
             }
             createBoard(); // reset board
