@@ -238,7 +238,7 @@ $(function() { // jQuery ready function
     }
 
 
-    
+
     // create tiles
     
     let tileID = 0; // counter for tileID creation
@@ -251,8 +251,7 @@ $(function() { // jQuery ready function
     populatePiecesArray();
     // for random number generator
     let min = 0;
-    // let max = pieces_array.length - 1;
-    let max = 7; // for testing
+    let max;
     // console.log("Min/max: ", min, max);
 
     createTileRack();
@@ -349,6 +348,9 @@ $(function() { // jQuery ready function
     }
     
     function createTileRack() {
+        // set random number variables
+        max = pieces_array.length - 1;
+        // max = 7; // for testing
         // clear tile rack
         $tile_rack.html("");
         // generate new tiles
@@ -361,6 +363,8 @@ $(function() { // jQuery ready function
             // tile_array[i] = $newTile;
         }
     }
+    
+
     
 
     // submit button
@@ -386,42 +390,50 @@ $(function() { // jQuery ready function
     //     $("#potential-score").text("Current Word Score: " + calculateScore().toString());
     // });
 
-
+    // bool var for message that shows after tiles been depleted
     let isDepletedMessageOn = false; 
+    
+    let numTilesOnBoard = 0; // counter for tiles on board for new tile pieces
+
+    // set of dictionary words
+    const wordSet = new Set(scrabbleWords.map(function(e) {
+        return e.toLowerCase();
+    }));
+
+    // let text = "";
+    // for (const x of wordSet) {
+    //     text += x;
+    // }
+    // console.log("Text: ", text);
 
     // submit button is clicked
     $submit.click(function() {
         // console.log("submit button was clicked");
         // console.log('$("#score")', $("#score"));
         // calculateScore();
-        let numTilesOnBoard = 0; // counter for tiles on board for new tile pieces
 
-        // calcuate and display total score
-        totalScore += calculateScore();
-        $("#score").text("Score: " + totalScore.toString());
+        // check if word is in dictionary
+        if (checkWord()) {
+            console.log("It's a word!");
 
-        // reset tile rack
-        board_array.forEach(function(i) {
-            numTilesOnBoard += i.children().length;
-        });
-        console.log("submit.click: numTilesOnBoard: ", numTilesOnBoard);
-        if (numTilesOnBoard > 0) { // if there are tiles on the board
-            for (let l = 0; l < numTilesOnBoard; l++) {
-                let $newTile = createTile();
-                if (!($newTile === null)) { // if there are more tiles
-                    $tile_rack.append($newTile);
-                }
-                else {
-                    if (!isDepletedMessageOn) {
-                        $("body").append("<p id='tiles-depleted'>All tiles have been dealt!</p>");
-                        isDepletedMessageOn = true;
-                    }
-                    
-                }
-            }
-            createBoard(); // reset board
-            $("#potential-score").text("Current Word Score: 0"); // reset potential score
+            $("#not-a-word").text("");
+
+            // calcuate and display total score
+            totalScore += calculateScore();
+            $("#score").text("Score: " + totalScore.toString());
+
+            resetTileRack();
+            
+        } 
+        else {
+            console.log("It's NOT a word!");
+
+            $("#not-a-word").text("That was not a word!");
+
+            resetTileRack();
         }
+
+        numTilesOnBoard = 0; // counter for tiles on board for new tile pieces
     });
 
     function calculateScore() {
@@ -475,6 +487,51 @@ $(function() { // jQuery ready function
 
     }
 
+
+    function checkWord() {
+        let _word_ = "";
+        board_array.forEach(function(i) {
+            if (!(i.children().length === 0)) {
+                let letter = i.children().attr("letter").toString();
+                _word_ += letter;
+            }
+        });
+        _word_ = _word_.trim().toLowerCase();
+        console.log("checkWord: _word_: ", _word_);
+        if (wordSet.has(_word_)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+    function resetTileRack() {
+        board_array.forEach(function(i) {
+            numTilesOnBoard += i.children().length;
+        });
+        console.log("submit.click: numTilesOnBoard: ", numTilesOnBoard);
+        if (numTilesOnBoard > 0) { // if there are tiles on the board
+            for (let l = 0; l < numTilesOnBoard; l++) {
+                let $newTile = createTile();
+                if (!($newTile === null)) { // if there are more tiles
+                    $tile_rack.append($newTile);
+                }
+                else {
+                    if (!isDepletedMessageOn) {
+                        $("#tiles-depleted").text("All tiles have been dealt!");
+                        isDepletedMessageOn = true;
+                    }
+                }
+            }
+            // reset board
+            createBoard(); 
+            // reset potential score
+            $("#potential-score").text("Current Word Score: 0"); 
+        }
+    }
+
+
     // restart button
 
     let isPressedRestart = false;
@@ -489,13 +546,14 @@ $(function() { // jQuery ready function
     $restart.click(function() {
         console.log("restart button was clicked");
         isPressedRestart = true;
-        console.log('$("#restart")', $("#restart"));
+        // console.log('$("#restart")', $("#restart"));
         totalScore = 0;
         createBoard();
         populatePiecesArray();
         createTileRack();
         $("#score").text("Score: 0");
         $("#potential-score").text("Current Word Score: 0");
+        $(".messages").text("");
     });
 
 

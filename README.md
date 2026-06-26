@@ -5,4 +5,6 @@ Scrabble bag image: https://i.etsystatic.com/9912930/r/il/fc9e74/4329904185/il_6
 
 JS Random Function: https://www.w3schools.com/JS/js_random.asp
 
+Dictionary List: https://github.com/kamilmielnik/scrabble-dictionaries/blob/master/english/twl06.txt
+
 

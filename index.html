@@ -20,36 +20,39 @@ Copyright (c) 2026 by Joe Plummer. All rights reserved. May be freely copied or 
     <body>
         <h1>Scrabble</h1>
 
-        <div id="score-container">
-            <p id="score">Score:</p>
-            <p id="potential-score">Current Word Score:</p>
-        </div>
+        <h4>
+            <ul>
+                <li>Drag a tile onto a space on the board.</li>
+                <li>Tile will not move once it is placed on the board.</li>
+                <li>Click "Submit Word" when you have made a word.</li>
+                <li>Click "Restart Game" if you want to restart the game.</li>
+                <li>"Score" displays your total score.</li>
+                <li>"Current Word Score" displays your potential score if you play what is currently on the board.</li>
+            </ul>
+        </h4>
 
-        <div id="board">
-            <!-- <div id="droppable" class="space">Drop here</div>
-            <div id="droppable1" class="space">Drop here</div>
-            <div id="droppable2" class="space">Drop here</div>
-            <div id="droppable3" class="space">Drop here</div>
-            <div id="droppable4" class="space">Drop here</div>
-            <div id="droppable5" class="space">Drop here</div>
-            <div id="droppable6" class="space">Drop here</div> -->
+        <div id="score-messages-container">
+            <div id="score-container">
+                <p id="score">Score:</p>
+                <p id="potential-score">Current Word Score:</p>
+            </div>
+            <div id="messages-container">
+                <p id="tiles-depleted" class="messages"></p>
+                <p id="not-a-word" class="messages"></p>
+            </div>
         </div>
+        
+        <div id="board"></div>
 
+        <div id="tile-rack"></div>
+
+        <div id="buttons">
+            <button id="submit">Submit Word</button>
+            <button id="restart">Restart Game</button>
+        </div>
         
 
-        <div id="tile-rack">
-            <!-- <div id="draggable" class="tiles">Drag me</div>
-            <div id="draggable1" class="tiles">Drag me</div>
-            <div id="draggable2" class="tiles">Drag me</div>
-            <div id="draggable3" class="tiles">Drag me</div>
-            <div id="draggable4" class="tiles">Drag me</div>
-            <div id="draggable5" class="tiles">Drag me</div>
-            <div id="draggable6" class="tiles">Drag me</div> -->
-        </div>
-
-        <button id="submit">Submit Word</button>
-
-        <button id="restart">Restart Game</button>
+        
         
 
         <!-- scripts -->
@@ -58,6 +61,7 @@ Copyright (c) 2026 by Joe Plummer. All rights reserved. May be freely copied or 
         <script src="https://code.jquery.com/ui/1.14.2/jquery-ui.min.js" integrity="sha256-mblSWfbYzaq/f+4akyMhE6XELCou4jbkgPv+JQPER2M=" crossorigin="anonymous"></script>
         <!-- JS -->
         <script src="./graphics_data/graphics_data/Scrabble_Pieces_AssociativeArray_Jesse.js"></script>
+        <script src="js/scrabble-words.js"></script>
         <script src="js/script.js"></script>
     </body>
 </html>
