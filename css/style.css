@@ -19,11 +19,7 @@ body {
 
  /* headers */
 h2, h3, h4, h5, h6 {
-    /* font-size: 150%; */
-    /* font-weight: bold; */
     padding: 0px;
-    /* margin: 5px; */
-    margin: 0px; /* tighten up */
 }
 @font-face {
     font-family: scrabble_font;
@@ -31,38 +27,27 @@ h2, h3, h4, h5, h6 {
 }
 h1 {
     font-family: scrabble_font;
-    /* color: */
     padding: 0px;
     font-size: 1000%;
-    margin: 0px; /* tighten up */
-    /* margin: 5px; */
+    margin: 0px; 
     
 }
 h4 > ul {
     width: 500px;
-    margin-top: 5px; /* added */
-    margin-bottom: 5px; /* reduce bottom gap */
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 /* score and messages */
 #score-messages-container {
-    /* before */
-    /* display: flex;
-    flex-direction: column; */
-
-    /* added */
-    margin-top: 0px; /* was no rule, default block margin */
+    margin-top: 0px; 
     margin-bottom: 0px;
     height: 100px;
-
     display: flex;
     gap: 25px;
 }
 #score-container, #messages-container {
     font-weight: bold;
-    /* padding: 1px;
-    width: 250px;
-    height: 50px; */
 }
 .messages {
     color: red;
@@ -74,33 +59,15 @@ h4 > ul {
     color: rgb(159, 104, 2);
 }
 
-
  /* board */
 #board {
-    /* added */
-    margin-top: 0px; /* was no top margin rule */ 
+    margin-top: 0px; 
     margin-bottom: 10px;
-    /* padding: 10px; */
-
-    /* margin: 10px; */
-
-    /* position: absolute; */
-    /* float: left; */
     width: 1000px;
     height: 75px;
-    /* left: 0; */
-    /* top: 75px; */
-    /* background-color: aquamarine; */
-    /* background-image: url("../graphics_data/graphics_data/Scrabble_Board_OneLine.png");
-    background-repeat: no-repeat;
-    background-position: left;
-    background-size: cover; */
-    /* z-index: 0; */
 }
 /* spaces */
 .spaces {
-    /* left: 10px;
-    top: 0; */
     width: 40px;
     height: 40px;
     padding: 10px;
@@ -112,13 +79,10 @@ h4 > ul {
     font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     font-weight: bold;
     text-align: center;
-    /* border: 3px solid black; */
     border-top: 3px solid black;
     border-bottom: 3px solid black;
     border-left: 1.5px solid black;
     border-right: 1.5px solid black;
-    /* padding: 10px; */
-    /* z-index: 1; */
 }
 .spaces:first-child {
     border-left: 3px solid black;
@@ -135,22 +99,12 @@ h4 > ul {
 
  /* tile rack */
 #tile-rack {
-    
-    /* after */
     display: flex;
     justify-content: center;
     align-items: center;
-
-    /* before: */
-    /* float: left; */ /* was active */
-    /* position: relative; */ /* was active */
-    /* top: 250px; */
-    /* left: 0; */
-    /* background-color: palevioletred; */
     width: 600px;
     height: 100px;
     margin: 10px;
-    /* padding-left: 100px; */
     z-index: 0;
     background-image: url("../graphics_data/graphics_data/scrabble-tile-holder-406774_640.png");
     background-repeat: no-repeat;
@@ -161,14 +115,7 @@ h4 > ul {
 .tiles {
     width: 60px;
     height: 60px;
-    /* display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    position: absolute; */
-    /* padding: 0.5em; */
-    /* float: left; */
     margin: 0px 5px 10px;
-    /* background: #6c582a; */
     background-size: contain;
     z-index: 2;
 }
