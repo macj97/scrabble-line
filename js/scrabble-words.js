@@ -1,4 +1,12 @@
 // Auto-generated Scrabble word list
+/**
+ * File: scrabble-words.js
+ * GUI Assignment: HW5 - Implementing a bit of Scrabble with drag-and-drop
+ * Description: Auto-generated Scrabble word array, created by
+ *              convertToJSArray.py, for Assignment 5
+ * Joe Plummer, UMass Lowell Computer Science, joseph_plummer@student.uml.edu
+ * Copyright (c) 2026 by Joe Plummer. All rights reserved. May be freely copied or excerpted for educational purposes with credit to the author.
+ */
 let scrabbleWords = [
   "aa",
   "aah",
