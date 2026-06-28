@@ -122,6 +122,13 @@ h4 > ul {
 
 /* buttons */
 #buttons {
+    display: flex;
+    gap: 25px;
     margin: 25px;
+}
+
+/* blank letter text box */
+#blank-letter {
+    width: 175px;
 }
 

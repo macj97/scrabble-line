@@ -21,6 +21,13 @@ $(function() { // jQuery ready function
 
     createBoard();
 
+    /**
+     * Function createSpace creates a space/droppable object
+     *          called by createBoard
+     * @param   N/A
+     * @return  jQuery object   Returns the varable $space
+     * @throws  N/A
+     */
     function createSpace() {
         let $space = $("<div></div>");
         $space.attr("id", "droppable"+spaceID);
@@ -74,6 +81,14 @@ $(function() { // jQuery ready function
         return $space;
     }
 
+    /**
+     * Function isOkayToDropTile determines if the draggable object
+     *          (tile) should be dropped into the droppable object (space) 
+     *          called by createSpace
+     * @param   $space  jQuery object   the draggable object being tested
+     * @return          bool            true or false if tile is okay to drop
+     * @throws  N/A
+     */
     function isOkayToDropTile($space) {
         let isEmpty, isFirst, isPrevSpaceOcc = false;
         let childNum = 0;
@@ -117,7 +132,13 @@ $(function() { // jQuery ready function
         }
     }
 
-
+    /**
+     * Function createBoard creates the board of spaces
+     *          called by resetTileRack, $restart.click
+     * @param   N/A
+     * @return  N/A
+     * @throws  N/A
+     */
     function createBoard() {
         // clear board first
         $board.html("");
@@ -140,7 +161,16 @@ $(function() { // jQuery ready function
         }
     }
     
-    // returns a random integer between min and max (both included)
+
+    /**
+     * Function getRndInteger returns a random integer between parameters 
+     *          min and max included (Source: w3schools)
+     *          called by createTile
+     * @param   min     integer     minimum number
+     * @param   max     integer     maximum number
+     * @return          integer     random number between min and max included
+     * @throws  N/A
+     */
     function getRndInteger(min, max) {
         return Math.floor(Math.random() * (max - min + 1) ) + min;
     }
@@ -154,6 +184,7 @@ $(function() { // jQuery ready function
     let $tile_rack = $("#tile-rack"); // actual tile-rack div
     pieces_array = []; // array holding the letter characters
     let totalScore = 0; // total running score
+    let blankLetter; // holds letter from user input when user plays a blank tile
 
     populatePiecesArray();
 
@@ -164,7 +195,16 @@ $(function() { // jQuery ready function
 
     createTileRack();
 
-    // populate pieces_array
+
+
+    /**
+     * Function populatePiecesArray populates the pieces_array array that is used to 
+     *          assign the grpahics onto the tiles
+     *          called by $restart.click
+     * @param   N/A
+     * @return  N/A
+     * @throws  N/A
+     */
     function populatePiecesArray() {
         // clear array first
         pieces_array.length = 0;
@@ -180,7 +220,14 @@ $(function() { // jQuery ready function
         }
     }
 
-    // creates a tile div, assigns attributes
+    
+    /**
+     * Function createTile creates a tile/draggable object
+     *          called by createTileRack, resetTileRack
+     * @param   N/A
+     * @return          jQuery object   returns $tile, the declared jQuery variable
+     * @throws  N/A
+     */
     function createTile() {
         // create div element
         let $tile = $("<div></div>");
@@ -212,6 +259,13 @@ $(function() { // jQuery ready function
         return $tile // return the tile jq variables
     }
     
+    /**
+     * Function createTileRack creates the tilerack for the tiles
+     *          called by $restart.click
+     * @param   N/A
+     * @return  N/A
+     * @throws  N/A
+     */
     function createTileRack() {
         // set random number variables
         max = pieces_array.length - 1;
@@ -224,10 +278,21 @@ $(function() { // jQuery ready function
             if ($newTile === null) { // if there are no more tiles
                 return;
             }
+            if ($newTile.attr("letter") === "_") { // if letter is a blank
+                $("#buttons").append('<input type="text" id="blank-letter" placeholder="Enter blank space letter here:">');
+            }
             $tile_rack.append($newTile);
             // tile_array[i] = $newTile;
         }
     }
+
+
+    // when user enters something in the input field for the blank tile
+    $(document).on("input", function() {
+        console.log("Input entered for blank letter!!!");
+        blankLetter = $("#blank-letter").val().trim().toString();
+        console.log("blankLetter: ", blankLetter);
+    });
     
 
     
@@ -255,6 +320,9 @@ $(function() { // jQuery ready function
         // console.log("submit button was clicked");
         // console.log('$("#score")', $("#score"));
 
+        // remove blankLetter text input box
+        $("#blank-letter").remove();
+
         // check if word is in dictionary
         if (checkWord()) {
             console.log("It's a word!");
@@ -279,6 +347,13 @@ $(function() { // jQuery ready function
         numTilesOnBoard = 0; // counter for tiles on board for new tile pieces
     });
 
+    /**
+     * Function calculateScore calculates the score of the player when they submit a word
+     *          called by createSpace, $submit.click
+     * @param   N/A
+     * @return          integer     the total score of the word played
+     * @throws  N/A
+     */
     function calculateScore() {
         let totalScore = 0;
         let dwScore = false;
@@ -327,13 +402,24 @@ $(function() { // jQuery ready function
         return totalScore;
     }
 
-
+    /**
+     * Function checkWord checks if the word played is actually a word
+     *          (Source for text file of words: kamilmielnik on github)
+     *          called by $submit.click
+     * @param   N/A
+     * @return          bool    true if word played is a word, false otherwise
+     * @throws  N/A
+     */
     function checkWord() {
         let _word_ = "";
         board_array.forEach(function(i) {
             if (!(i.children().length === 0)) {
                 let letter = i.children().attr("letter").toString();
-                _word_ += letter;
+                if (!(letter === "_")) {
+                    _word_ += letter;
+                } else { // if letter on the board is a blank:
+                    _word_ += blankLetter;
+                }
             }
         });
         _word_ = _word_.trim().toLowerCase();
@@ -346,6 +432,15 @@ $(function() { // jQuery ready function
     }
 
 
+    /**
+     * Function resetTileRack makes sure there are 7 tiles on the tile rack,
+     *          only adds random tile(s) to the rack if there are less than
+     *          seven tiles
+     *          called by $submit.click
+     * @param   N/A
+     * @return  N/A
+     * @throws  N/A
+     */
     function resetTileRack() {
         board_array.forEach(function(i) {
             numTilesOnBoard += i.children().length;
@@ -355,9 +450,15 @@ $(function() { // jQuery ready function
             for (let l = 0; l < numTilesOnBoard; l++) {
                 let $newTile = createTile();
                 if (!($newTile === null)) { // if there are more tiles
-                    $tile_rack.append($newTile);
+                    if ($newTile.attr("letter") === "_") { // if letter is a blank
+                        $("#buttons").append('<input type="text" id="blank-letter" placeholder="Enter blank space letter here:">');
+                        
+                    }
+                    else {
+                        $tile_rack.append($newTile);
+                    }
                 }
-                else {
+                else { // if there are no more tiles
                     if (!isDepletedMessageOn) {
                         $("#tiles-depleted").text("All tiles have been dealt!");
                         isDepletedMessageOn = true;
@@ -374,7 +475,7 @@ $(function() { // jQuery ready function
 
     // restart button
 
-    let isPressedRestart = false;
+    // let isPressedRestart = false;
 
     // create restart button
     $("#restart").button();
@@ -385,11 +486,12 @@ $(function() { // jQuery ready function
     // restart button is clicked
     $restart.click(function() {
         console.log("restart button was clicked");
-        isPressedRestart = true;
+        // isPressedRestart = true;
         // console.log('$("#restart")', $("#restart"));
         totalScore = 0;
         createBoard();
         populatePiecesArray();
+        $("#blank-letter").remove();
         createTileRack();
         $("#score").text("Score: 0");
         $("#potential-score").text("Current Word Score: 0");
