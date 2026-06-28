@@ -6,10 +6,6 @@
  * Copyright (c) 2026 by Joe Plummer. All rights reserved. May be freely copied or excerpted for educational purposes with credit to the author.
  */
 
-/**
- * What does a blank do?
- */
-
 $(function() { // jQuery ready function
 
     // create board and spaces
@@ -81,6 +77,7 @@ $(function() { // jQuery ready function
         return $space;
     }
 
+
     /**
      * Function isOkayToDropTile determines if the draggable object
      *          (tile) should be dropped into the droppable object (space) 
@@ -131,6 +128,7 @@ $(function() { // jQuery ready function
             return false;
         }
     }
+
 
     /**
      * Function createBoard creates the board of spaces
@@ -191,10 +189,8 @@ $(function() { // jQuery ready function
     // for random number generator
     let min = 0;
     let max;
-    // console.log("Min/max: ", min, max);
 
     createTileRack();
-
 
 
     /**
@@ -259,6 +255,7 @@ $(function() { // jQuery ready function
         return $tile // return the tile jq variables
     }
     
+
     /**
      * Function createTileRack creates the tilerack for the tiles
      *          called by $restart.click
@@ -287,6 +284,7 @@ $(function() { // jQuery ready function
     }
 
 
+
     // when user enters something in the input field for the blank tile
     $(document).on("input", function() {
         console.log("Input entered for blank letter!!!");
@@ -295,19 +293,12 @@ $(function() { // jQuery ready function
     });
     
 
-    
 
     // submit button
 
-    // create submit button
-    $("#submit").button();
-
-    // jquery var for submit button
-    let $submit = $("#submit");
-
-    // bool var for message that shows after tiles been depleted
-    let isDepletedMessageOn = false; 
-    
+    $("#submit").button(); // create submit button
+    let $submit = $("#submit"); // jquery var for submit button
+    let isDepletedMessageOn = false; // bool var for message that shows after tiles been depleted
     let numTilesOnBoard = 0; // counter for tiles on board for new tile pieces
 
     // set of dictionary words
@@ -317,35 +308,26 @@ $(function() { // jQuery ready function
 
     // submit button is clicked
     $submit.click(function() {
-        // console.log("submit button was clicked");
-        // console.log('$("#score")', $("#score"));
-
         // remove blankLetter text input box
         $("#blank-letter").remove();
-
         // check if word is in dictionary
         if (checkWord()) {
-            console.log("It's a word!");
-
+            // console.log("It's a word!");
             $("#not-a-word").text("");
-
             // calcuate and display total score
             totalScore += calculateScore();
             $("#score").text("Score: " + totalScore.toString());
-
             resetTileRack();
-            
         } 
         else {
-            console.log("It's NOT a word!");
-
+            // console.log("It's NOT a word!");
+            // display message
             $("#not-a-word").text("That was not a word!");
-
             resetTileRack();
         }
-
-        numTilesOnBoard = 0; // counter for tiles on board for new tile pieces
+        numTilesOnBoard = 0; // reset counter for tiles on board for new tile pieces
     });
+
 
     /**
      * Function calculateScore calculates the score of the player when they submit a word
@@ -401,6 +383,7 @@ $(function() { // jQuery ready function
         // console.log("Final totalScore:", totalScore);
         return totalScore;
     }
+
 
     /**
      * Function checkWord checks if the word played is actually a word
@@ -473,29 +456,22 @@ $(function() { // jQuery ready function
     }
 
 
+
     // restart button
 
-    // let isPressedRestart = false;
-
-    // create restart button
-    $("#restart").button();
-
-    // jquery var for submit button
-    let $restart = $("#restart");
-
+    $("#restart").button(); // create restart button
+    let $restart = $("#restart"); // jquery var for restart button
     // restart button is clicked
     $restart.click(function() {
-        console.log("restart button was clicked");
-        // isPressedRestart = true;
-        // console.log('$("#restart")', $("#restart"));
-        totalScore = 0;
+        // console.log("restart button was clicked");
+        totalScore = 0; // reset total score variable
         createBoard();
         populatePiecesArray();
-        $("#blank-letter").remove();
+        $("#blank-letter").remove(); // remove blank letter input box
         createTileRack();
-        $("#score").text("Score: 0");
-        $("#potential-score").text("Current Word Score: 0");
-        $(".messages").text("");
+        $("#score").text("Score: 0"); // reset total score
+        $("#potential-score").text("Current Word Score: 0"); // reset potential score
+        $(".messages").text(""); // remove messages
     });
 
     
