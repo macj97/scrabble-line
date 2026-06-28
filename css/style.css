@@ -6,7 +6,6 @@
  * Copyright (c) 2026 by Joe Plummer. All rights reserved. May be freely copied or excerpted for educational purposes with credit to the author.
  */
 
-
 /* entire page */
 body {
     min-width: 750px;
@@ -131,4 +130,3 @@ h4 > ul {
 #blank-letter {
     width: 175px;
 }
-
