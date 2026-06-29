@@ -22,6 +22,7 @@ h2, h3, h4, h5, h6 {
 }
 @font-face {
     font-family: scrabble_font;
+    /* Source: Rob Hindley */
     src: url("../other/Scrabbles.ttf");
 }
 h1 {

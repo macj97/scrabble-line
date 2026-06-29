@@ -1,5 +1,8 @@
-# convert_to_js_array.py
-# Converts a newline-separated word list into a JavaScript array file
+# File: convertToJSArray.py
+# GUI Assignment: HW5 - Implementing a bit of Scrabble with drag-and-drop
+# Description: Python program used to convert dictionary text list into javascript array of strings
+# Joe Plummer, UMass Lowell Computer Science, joseph_plummer@student.uml.edu
+# Copyright (c) 2026 by Joe Plummer. All rights reserved. May be freely copied or excerpted for educational purposes with credit to the author.
 
 import json
 from pathlib import Path
