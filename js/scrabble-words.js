@@ -1,4 +1,3 @@
-// Auto-generated Scrabble word list
 /**
  * File: scrabble-words.js
  * GUI Assignment: HW5 - Implementing a bit of Scrabble with drag-and-drop

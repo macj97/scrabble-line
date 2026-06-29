@@ -28,6 +28,10 @@ Copyright (c) 2026 by Joe Plummer. All rights reserved. May be freely copied or 
                 <li>Tiles can only be placed from left to right, no spaces.</li>
                 <li>Click "Submit Word" when you have made a word.</li>
                 <li>Click "Restart Game" if you want to restart the game.</li>
+                <li>If you cannot make a word, you can hit the "Reset Tiles" button.</li>
+                    <ul>
+                        <li>Board must be clear before you hit "Reset Tiles" button.</li>
+                    </ul>
                 <li>"Score" displays your total score.</li>
                 <li>"Current Word Score" displays your potential score if you play what is currently on the board.</li>
                 <li>If you get a "blank" tile:</li>
@@ -50,6 +54,7 @@ Copyright (c) 2026 by Joe Plummer. All rights reserved. May be freely copied or 
             <div id="messages-container">
                 <p id="tiles-depleted" class="messages"></p>
                 <p id="not-a-word" class="messages"></p>
+                <p id="board-clear" class="messages"></p>
             </div>
         </div>
         
@@ -61,6 +66,7 @@ Copyright (c) 2026 by Joe Plummer. All rights reserved. May be freely copied or 
         <div id="buttons">
             <button id="submit">Submit Word</button>
             <button id="restart">Restart Game</button>
+            <button id="reset">Reset Tiles</button>
         </div>
         
         <!-- scripts -->

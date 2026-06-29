@@ -46,6 +46,10 @@ $(function() { // jQuery ready function
                     ui.draggable.draggable( "option", "disabled", true );
                     // calculate current word score
                     $("#potential-score").text("Current Word Score: " + calculateScore().toString());
+                    if (ui.draggable.attr("letter") === "_") {
+                        console.log("A blank has been dropped!");
+                        blankLetterInRack = false;
+                    }
                     
                 }
                 else {
@@ -158,11 +162,13 @@ $(function() { // jQuery ready function
     let totalScore = 0; // total running score
     let blankLetter; // holds letter from user input when user plays a blank tile
     let blankLetterUsed = false; // bool for is blankLetter was used
+    let blankLetterInRack = false;
 
     populatePiecesArray();
 
     // for random number generator
     let min = 0;
+    // let min = 90; // for testing
     let max;
 
     createTileRack();
@@ -187,6 +193,7 @@ $(function() { // jQuery ready function
             }
             offset += ScrabbleTiles[letter]['number-remaining'];
         }
+        console.log("populatePiecesArray: pieces_array: ", pieces_array);
     }
 
     
@@ -206,9 +213,10 @@ $(function() { // jQuery ready function
         $tile.draggable({ revert: "invalid" });
         // setting graphic
         let index = getRndInteger(min, max);
-        max--;
         if (max < 0){ // if there are not more tiles to generate
             return null;
+        } else {
+            max--;
         }
         let tile_letter = pieces_array[index];
         if (!(tile_letter == "_")) { // blank image
@@ -219,6 +227,7 @@ $(function() { // jQuery ready function
         pieces_array.splice(index, 1); // remove letter from pieces_array
         tileID = tileID + 1; // increment tileID number
         $tile.attr("letter", tile_letter); // add 'letter' attribute
+        $tile.attr("index", index); // add 'index' attribute // needed?
         return $tile // return the tile jq variable
     }
     
@@ -233,7 +242,7 @@ $(function() { // jQuery ready function
     function createTileRack() {
         // set random number variables
         max = pieces_array.length - 1;
-        // max = 7; // for testing
+        // max = 99; // for testing
         // clear tile rack
         $tile_rack.html("");
         // generate new tiles
@@ -245,9 +254,12 @@ $(function() { // jQuery ready function
             if ($newTile.attr("letter") === "_") { // if letter is a blank
                 // add input textbox element
                 $("#buttons").append('<input type="text" id="blank-letter" placeholder="Enter blank space letter here:">');
+                blankLetterInRack = true;
             }
             $tile_rack.append($newTile);
         }
+        console.log("createTileRack: pieces_array: ", pieces_array);
+        console.log("createTileRack: max: ", max);
     }
 
 
@@ -255,6 +267,7 @@ $(function() { // jQuery ready function
     $(document).on("input", function() {
         blankLetter = $("#blank-letter").val().trim().toString();
         blankLetterUsed = true;
+        blankLetterInRack = false;
     });
     
 
@@ -273,24 +286,34 @@ $(function() { // jQuery ready function
 
     // submit button is clicked
     $submit.click(function() {
-        // remove blank letter text input box if blank letter was used
+        console.log("Submit button is clicked...");
+        // remove blank letter text input box if blank letter was used, or not in rack
+        console.log("Submit.click: blankLetterUsed: ", blankLetterUsed);
+        console.log("Submit.click: blankLetterInRack: ", blankLetterInRack);
         if (blankLetterUsed) {
             $("#blank-letter").remove();
+            console.log("Submit.click: blank-letter textbox removed...");
             blankLetterUsed = false;
         }
+        else if (!blankLetterInRack) {
+            $("#blank-letter").remove();
+            console.log("Submit.click: blank-letter textbox removed...");
+        }
         // check if word is in dictionary
-        if (checkWord()) {
-            // remove message if showing
+        if (checkWord()) { // if a legal word
+            // remove messages if showing
             $("#not-a-word").text("");
+            $("#board-clear").text("");
             // calcuate and display total score, reset tile rack
             totalScore += calculateScore();
             $("#score").text("Score: " + totalScore.toString());
-            resetTileRack();
+            resetTileRack(0);
         } 
-        else {
+        else { // if not a legal word
             // display message
             $("#not-a-word").text("That was not a word!");
-            resetTileRack();
+            $("#board-clear").text(""); // clear message if showing
+            resetTileRack(0);
         }
         numTilesOnBoard = 0; // reset counter for tiles on board for new tile pieces
     });
@@ -368,31 +391,93 @@ $(function() { // jQuery ready function
 
     /**
      * Function resetTileRack makes sure there are 7 tiles on the tile rack,
-     *          only adds random tile(s) to the rack if there are less than
-     *          seven tiles
-     *          called by $submit.click
-     * @param   N/A
+     *          either adds random tile(s) to the rack if there are less than
+     *          seven tiles, or replaces all tiles
+     *          called by $submit.click, $reset.click
+     * @param   opt     integer     0-reset tile rack and create tiles needed (after submit word)
+     *                              1-reset all tiles on the tile rack (after reset tiles)
      * @return  N/A
      * @throws  N/A
      */
-    function resetTileRack() {
-        board_array.forEach(function(i) {
-            numTilesOnBoard += i.children().length;
-        });
-        console.log("numTilesOnBoard: ", numTilesOnBoard);
-        if (numTilesOnBoard > 0) { // if there are tiles on the board
-            for (let l = 0; l < numTilesOnBoard; l++) {
+    function resetTileRack(opt) {
+        if (opt === 0) { // option 0
+            board_array.forEach(function(i) {
+                numTilesOnBoard += i.children().length;
+            });
+            console.log("resetTileRack: numTilesOnBoard: (opt 0)", numTilesOnBoard);
+            // if (blankLetterInRack) { // reset var for blank letter on tile rack, and remove textbox
+            //     console.log("resetTileRack(0): blankLetterInRack", blankLetterInRack);
+            //     blankLetterInRack = false;
+            //     $("#blank-letter").remove();
+            //     console.log("resetTileRack: blank-letter textbox removed...");
+            //     console.log("resetTileRack(0): blankLetterInRack is now", blankLetterInRack);
+            // }
+            console.log("pieces_array is ", pieces_array);
+            console.log("max is: ", max);
+            if (numTilesOnBoard > 0) { // if there are tiles on the board
+                for (let l = 0; l < numTilesOnBoard; l++) {
+                    let $newTile = createTile();
+                    if (!($newTile === null)) { // if there are more tiles, create tiles needed
+                        if ($newTile.attr("letter") === "_") { // if letter is a blank
+                            $("#buttons").append('<input type="text" id="blank-letter" placeholder="Enter blank space letter here:">');
+                            $tile_rack.append($newTile);
+                            blankLetterInRack = true;
+                        }
+                        else {
+                            $tile_rack.append($newTile);
+                        }
+                    }
+                    else { // if there are no more tiles, dislay message
+                        if (!isDepletedMessageOn) {
+                            $("#tiles-depleted").text("All tiles have been dealt!");
+                            isDepletedMessageOn = true;
+                        }
+                    }
+                }
+                console.log("pieces_array is now: ", pieces_array);
+                console.log("max is now: ", max);
+                // reset board
+                createBoard(); 
+                // reset potential score
+                $("#potential-score").text("Current Word Score: 0"); 
+            }
+        } else if (opt === 1) { // option 1
+            console.log("resetTileRack: numTilesOnBoard: (opt 1, should be 0): ", numTilesOnBoard);
+            $("#blank-letter").remove(); // remove blank letter input box if showing
+            for (let l = 0; l < $tile_rack.children().length; l++) { // put tile back in "bag"
+                console.log("Letter in tile-rack: ", $tile_rack.children().eq(l).attr("letter"));
+                let tileLetter = $tile_rack.children().eq(l).attr("letter");
+                // console.log("Index attr of letter in tile-rack:", $tile_rack.children().eq(l).attr("index"));
+                // let tileLetterIndex = $tile_rack.children().eq(l).attr("index");
+                let insertIndex = pieces_array.indexOf(tileLetter);
+                console.log("insertIndex:", insertIndex);
+                if (insertIndex === -1) {
+                    insertIndex = getCorrectIndex(tileLetter);
+                    console.log("insertIndex is now:", insertIndex);
+                }
+                pieces_array.splice(insertIndex, 0, tileLetter);
+                console.log("inserted ", tileLetter, " at index ", insertIndex);
+                max++;
+                console.log("pieces_array is currently", pieces_array);
+                console.log("max is currently: ", max);
+            }
+            console.log("pieces_array after putting back tiles: ", pieces_array);
+            console.log("max after putting back tiles:: ", max);
+            $tile_rack.html("") // clear tile rack
+            console.log("restTileRack: Tile rack cleared...");
+            for (let l = 0; l < numTiles; l++) {
                 let $newTile = createTile();
-                if (!($newTile === null)) { // if there are more tiles
+                if (!($newTile === null)) { // if there are more tiles, create tiles needed
                     if ($newTile.attr("letter") === "_") { // if letter is a blank
                         $("#buttons").append('<input type="text" id="blank-letter" placeholder="Enter blank space letter here:">');
                         $tile_rack.append($newTile);
+                        blankLetterInRack = true;
                     }
                     else {
                         $tile_rack.append($newTile);
                     }
                 }
-                else { // if there are no more tiles
+                else { // if there are no more tiles, dislay message
                     if (!isDepletedMessageOn) {
                         $("#tiles-depleted").text("All tiles have been dealt!");
                         isDepletedMessageOn = true;
@@ -403,6 +488,37 @@ $(function() { // jQuery ready function
             createBoard(); 
             // reset potential score
             $("#potential-score").text("Current Word Score: 0"); 
+        } else {
+            console.log("Option was not specified for resetTileRack.");
+        }
+    }
+
+
+    /**
+     * Function getCorrectIndex, helper function for resetTileRack, gets the index
+     *          that the letter should be placed in pieces_array
+     * @param   letter      string      letter that is being placed back in pieces_array
+     * @return              integer     index that the letter should be placed in pieces_array
+     * @throws  N/A
+     */
+    function getCorrectIndex(letter) {
+        let nextTileLetter;
+        if (letter === "_") {
+            return 0;
+        }
+        if (!(letter === "Z")) { // if letter is not "Z"
+            nextTileLetter = String.fromCharCode(letter.charCodeAt(0)+1);
+        } else { // if letter is "Z"
+            nextTileLetter = "_";
+        }
+        console.log("getCorrectIndex: nextTileLetter: ", nextTileLetter);
+        index = pieces_array.indexOf(nextTileLetter);
+        console.log("getCorrectIndex: index: ", index);
+        if (index === -1) {
+            index = getCorrectIndex(nextTileLetter);
+            return index;
+        } else {
+            return index;
         }
     }
 
@@ -414,14 +530,37 @@ $(function() { // jQuery ready function
     let $restart = $("#restart"); // jquery var for restart button
     // restart button is clicked
     $restart.click(function() {
+        console.log("Restart button is clicked...");
         totalScore = 0; // reset total score variable
-        createBoard();
-        populatePiecesArray();
+        createBoard(); // create new board
+        populatePiecesArray(); // helper to create tiles
         $("#blank-letter").remove(); // remove blank letter input box
-        createTileRack();
+        blankLetterUsed = false; // reset blank letter bool variable
+        createTileRack(); // create new tile rack
         $("#score").text("Score: 0"); // reset total score
         $("#potential-score").text("Current Word Score: 0"); // reset potential score
         $(".messages").text(""); // remove messages
+    });
+
+
+    // reset tiles button 
+
+    $("#reset").button(); // create reset tiles button
+    let $reset = $("#reset"); // jquery var for reset tiles button
+
+    // reset tiles button is clicked
+    $reset.click(function() {
+        console.log("Reset Tiles button is clicked...");
+        board_array.forEach(function(i) { // check for tiles on board
+            numTilesOnBoard += i.children().length;
+        });
+        if (numTilesOnBoard > 0) { // if there are tiles on board
+            $("#board-clear").text("Board must be clear to reset tiles."); // show message
+            numTilesOnBoard = 0; // reset variable
+            return;
+        }
+        $("#board-clear").text(""); // clear message if showing
+        resetTileRack(1);
     });
 
     
